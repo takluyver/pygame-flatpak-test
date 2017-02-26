@@ -25,7 +25,7 @@ export:
 reinstall:
 	# Ensure our repo is a remote, uninstall the application and install it again
 	flatpak --user remote-add --no-gpg-verify --if-not-exists pg-test-repo repo
-	flatpak --user uninstall org.pygame.aliens
+	flatpak --user uninstall org.pygame.aliens || true
 	flatpak --user install pg-test-repo org.pygame.aliens
 
 build-install:
