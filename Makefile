@@ -11,6 +11,12 @@ pygame/__init__.py: pygame-1.9.3-cp34-cp34m-manylinux1_x86_64.whl
 # (3.4 is the Python 3 version available in the freedesktop 1.4 runtime)
 get-pkg: pygame/__init__.py 
 
+install-runtime:
+	# Install the freedesktop 1.4 platform and SDK (runtime for building the app)
+	flatpak remote-add --if-not-exists gnome http://sdk.gnome.org/repo/
+	flatpak install gnome org.freedesktop.Sdk//1.4 || true
+	flatpak install gnome org.freedesktop.Platform//1.4 || true
+
 build-dir: get-pkg
 	# Main build steps - set up $(build_dir) and build the app in it.
 	rm -rf $(build_dir)
@@ -22,10 +28,12 @@ export:
 	# Export the build directory into a repo (the source for installation)
 	flatpak build-export repo $(build_dir)
 
-reinstall:
+uninstall:
+	flatpak --user uninstall org.pygame.aliens || true
+
+reinstall: uninstall
 	# Ensure our repo is a remote, uninstall the application and install it again
 	flatpak --user remote-add --no-gpg-verify --if-not-exists pg-test-repo repo
-	flatpak --user uninstall org.pygame.aliens || true
 	flatpak --user install pg-test-repo org.pygame.aliens
 
 build-install:
