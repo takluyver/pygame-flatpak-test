@@ -36,3 +36,5 @@ build-install:
 	cp -r pygame-1.9.3.dist-info /app/pypkgs
 	mkdir /app/bin
 	cp launch.py /app/bin/aliens
+	mkdir -p /app/share/applications
+	cp org.pygame.aliens.desktop /app/share/applications

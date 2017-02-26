@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Aliens
+Comment=Fight off aliens in a classic 2D arcade game
+Exec=aliens
+Terminal=false
+Type=Application
+Icon=gedit
+StartupNotify=true
+Categories=Game;

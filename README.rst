@@ -5,7 +5,7 @@ for Linux (`developer docs <http://docs.flatpak.org/en/latest/index.html>`__).
 Pygame is a framework for making games.
 
 The code here builds a flatpak package of the pygame *Aliens* example game. To
-try it out::
+try it out on a system with Flatpak::
 
     make build-dir export reinstall
     flatpak run org.pygame.aliens
