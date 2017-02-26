@@ -10,4 +10,6 @@ try it out::
     make build-dir export reinstall
     flatpak run org.pygame.aliens
 
-Look inside the Makefile for more details of what's going on.
+Look inside the Makefile for more details of what's going on. It's based on the
+`building simple apps <http://docs.flatpak.org/en/latest/building-simple-apps.html>`__
+section of the Flatpak docs.
