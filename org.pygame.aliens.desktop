@@ -4,6 +4,6 @@ Comment=Fight off aliens in a classic 2D arcade game
 Exec=aliens
 Terminal=false
 Type=Application
-Icon=gedit
+Icon=org.pygame.aliens
 StartupNotify=true
 Categories=Game;

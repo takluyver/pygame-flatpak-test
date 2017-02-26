@@ -46,3 +46,8 @@ build-install:
 	cp launch.py /app/bin/aliens
 	mkdir -p /app/share/applications
 	cp org.pygame.aliens.desktop /app/share/applications
+
+	for size in 32 48 64 96 128 ; do \
+		install -TD icons/pygame_snake_$$size.png \
+			/app/share/icons/hicolor/$${size}x$${size}/apps/org.pygame.aliens.png ; \
+	done
