@@ -36,6 +36,10 @@ reinstall: uninstall
 	flatpak --user remote-add --no-gpg-verify --if-not-exists pg-test-repo repo
 	flatpak --user install pg-test-repo org.pygame.aliens
 
+build-baseapp:
+	rm -rf baseapp
+	flatpak-builder baseapp org.pygame.baseapp.json
+
 build-install:
 	# This is run inside the build environment
 	# It installs the files for the application into /app

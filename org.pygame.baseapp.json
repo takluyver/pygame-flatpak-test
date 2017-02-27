@@ -1,0 +1,76 @@
+{
+    "id": "org.pygame.BaseApp",
+    "runtime": "org.freedesktop.Platform",
+    "sdk": "org.freedesktop.Sdk",
+    "runtime-version": "1.4",
+    "cleanup": [ "/cache",
+                 "/include",
+                 "/lib/pkgconfig",
+                 "/man",
+                 "/share/aclocal",
+                 "/share/devhelp",
+                 "/share/gir-1.0",
+                 "/share/gtk-doc",
+                 "/share/man",
+                 "/share/pkgconfig",
+                 "/share/vala",
+                 "/lib/systemd",
+                 "*.la", "*.a" ],
+    "build-options" : {
+        "cflags": "-O2 -g",
+        "cxxflags": "-O2 -g"
+    },
+    "modules": [
+        {
+            "name": "cpython",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tar.xz",
+                    "sha256": "b0c5f904f685e32d9232f7bdcbece9819a892929063b6e385414ad2dd6a23622"
+                }
+            ]
+        },
+        {
+            "name": "audiofile",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "http://audiofile.68k.org/audiofile-0.3.6.tar.gz",
+                    "sha256": "cdc60df19ab08bfe55344395739bb08f50fc15c92da3962fac334d3bff116965"
+                }
+            ]
+        },
+        {
+            "name": "libmikmod",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://sourceforge.net/projects/mikmod/files/libmikmod/3.3.10/libmikmod-3.3.10.tar.gz",
+                    "sha256": "00b3f5298431864ebd069de793ec969cfea3ae6f340f6dfae1ff7da1ae24ef48"
+                }
+            ]
+        },
+        {
+            "name": "fluidsynth",    
+            "config-opts": ["--disable-alsa-support"],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://downloads.sourceforge.net/project/fluidsynth/fluidsynth-1.1.6/fluidsynth-1.1.6.tar.bz2",
+                    "sha256": "d28b47dfbf7f8e426902ae7fa2981d821fbf84f41da9e1b85be933d2d748f601"
+                }
+            ]
+        },
+        {
+            "name": "sdl",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://www.libsdl.org/release/SDL-1.2.15.tar.gz",
+                    "sha256": "d6d316a793e5e348155f0dd93b979798933fb98aa1edebcc108829d6474aad00"
+                }
+            ]
+        }
+    ]
+}
