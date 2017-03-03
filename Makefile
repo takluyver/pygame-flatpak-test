@@ -17,10 +17,11 @@ install-runtime:
 	flatpak install gnome org.freedesktop.Sdk//1.4 || true
 	flatpak install gnome org.freedesktop.Platform//1.4 || true
 
-build-dir: get-pkg
+build-dir:
 	# Main build steps - set up $(build_dir) and build the app in it.
 	rm -rf $(build_dir)
-	flatpak build-init $(build_dir) org.pygame.aliens org.freedesktop.Sdk org.freedesktop.Platform 1.4
+	flatpak build-init --base=org.pygame.BaseApp $(build_dir) org.pygame.aliens \
+				org.freedesktop.Sdk org.freedesktop.Platform 1.4
 	flatpak build $(build_dir) make build-install
 	flatpak build-finish $(build_dir) --socket=x11 --socket=pulseaudio --command=aliens
 
@@ -40,13 +41,24 @@ build-baseapp:
 	rm -rf baseapp
 	flatpak-builder baseapp org.pygame.baseapp.json
 
+export-baseapp:
+	flatpak build-export repo baseapp
+
+uninstall-baseapp:
+	flatpak --user uninstall org.pygame.BaseApp || true
+
+reinstall-baseapp: uninstall-baseapp
+	# Ensure our repo is a remote, uninstall the application and install it again
+	flatpak --user remote-add --no-gpg-verify --if-not-exists pg-test-repo repo
+	flatpak --user install pg-test-repo org.pygame.BaseApp
+
 build-install:
 	# This is run inside the build environment
 	# It installs the files for the application into /app
-	mkdir /app/pypkgs
-	cp -r pygame /app/pypkgs
-	cp -r pygame-1.9.3.dist-info /app/pypkgs
-	mkdir /app/bin
+	# mkdir /app/pypkgs
+	# cp -r pygame /app/pypkgs
+	# cp -r pygame-1.9.3.dist-info /app/pypkgs
+	# mkdir /app/bin
 	cp launch.py /app/bin/aliens
 	mkdir -p /app/share/applications
 	cp org.pygame.aliens.desktop /app/share/applications
