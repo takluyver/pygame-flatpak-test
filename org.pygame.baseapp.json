@@ -1,5 +1,6 @@
 {
     "id": "org.pygame.BaseApp",
+    "command": "/usr/bin/bash",
     "runtime": "org.freedesktop.Platform",
     "sdk": "org.freedesktop.Sdk",
     "runtime-version": "1.4",

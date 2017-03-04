@@ -26,12 +26,12 @@ uninstall-aliens:
 install-aliens: uninstall-aliens repo-added.done
 	flatpak --user install pg-test-repo org.pygame.aliens
 
-build-baseapp.done:
-	rm -rf baseapp
-	flatpak-builder baseapp org.pygame.baseapp.json
+build-baseapp.done: org.pygame.baseapp.json
+	rm -rf build/baseapp
+	flatpak-builder build/baseapp org.pygame.baseapp.json
 	touch $@
 
-export-baseapp.done:
+export-baseapp.done: build-baseapp.done
 	flatpak build-export repo baseapp
 	touch $@
 
