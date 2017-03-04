@@ -34,4 +34,4 @@ There are two variants of the base application:
 Flatpak applications use a *runtime*, a bundle of common libraries and
 executables. If your application is the first a user installs with a given
 runtime, Flatpak will download the runtime as well. Hopefully most apps will
-use a few runtimes, so that installation is quick and easy.
+share a few runtimes, so that installation is quick and easy.
