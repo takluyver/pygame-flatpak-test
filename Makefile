@@ -37,20 +37,47 @@ reinstall: uninstall
 	flatpak --user remote-add --no-gpg-verify --if-not-exists pg-test-repo repo
 	flatpak --user install pg-test-repo org.pygame.aliens
 
-build-baseapp:
+build-baseapp.done:
 	rm -rf baseapp
 	flatpak-builder baseapp org.pygame.baseapp.json
+	touch $@
 
-export-baseapp:
+export-baseapp.done:
 	flatpak build-export repo baseapp
+	touch $@
 
 uninstall-baseapp:
 	flatpak --user uninstall org.pygame.BaseApp || true
 
-reinstall-baseapp: uninstall-baseapp
-	# Ensure our repo is a remote, uninstall the application and install it again
+repo-added.done:
 	flatpak --user remote-add --no-gpg-verify --if-not-exists pg-test-repo repo
+	touch $@
+
+# Ensure our repo is a remote, uninstall the application and install it again
+install-baseapp.done: uninstall-baseapp export-baseapp.done repo-added.done
 	flatpak --user install pg-test-repo org.pygame.BaseApp
+	touch $@
+
+build-baseapp-%.done: install-baseapp.done org.pygame.baseapp-%.json
+	mkdir -p build
+	rm -rf build/baseapp-$*
+	flatpak-builder build/baseapp-$* org.pygame.baseapp-$*.json
+	touch $@
+
+export-baseapp-%.done: build-baseapp-%.done
+	flatpak build-export repo build/baseapp-$*
+	touch $@
+
+uninstall-baseapp-%:
+	flatpak --user uninstall org.pygame.BaseApp-$* || true
+
+install-baseapp-%.done: uninstall-baseapp-% export-baseapp-%.done repo-added.done
+	flatpak --user install pg-test-repo org.pygame.BaseApp-$*
+
+all: install-baseapp-py34.done install-baseapp-py36.done
+
+org.pygame.BaseApp%.bundle: export-baseapp%.done
+	flatpak build-bundle repo $@ org.pygame.BaseApp$*
 
 build-install:
 	# This is run inside the build environment

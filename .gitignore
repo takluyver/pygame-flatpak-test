@@ -1,7 +1,9 @@
 /aliens/
+/build/
 /baseapp/
 /repo/
 /pygame/
 /pygame-1.*
 .flatpak-builder/
-
+*.done
+*.bundle
