@@ -12,12 +12,26 @@ try it out on a system with Flatpak, run:
     # Slow, but only needed once:
     make install-runtime
     
-    # Build the app and install it
-    make build-dir export reinstall
+    # Build the base applications and install them:
+    make install-baseapp-py36.done
+    make install-baseapp-py34.done
+    
+    # Build and install the 'aliens' example
+    make install-aliens
     
     # Play!
     flatpak run org.pygame.aliens
 
-Look inside the Makefile to see how it works. It's based on the
-`building simple apps <http://docs.flatpak.org/en/latest/building-simple-apps.html>`__
-section of the Flatpak docs.
+There are two variants of the base application:
+
+- ``-py36`` includes Python 3.6 as ``/app/bin/python3``. This is approximately
+  30 MiB to download, and 140 MiB when installed. The *Aliens* example is built
+  on this by default.
+- ``-py34`` uses Python 3.4, which is provided by the freedesktop.org runtime.
+  This makes it smaller - about 7 MiB to download, and 40 MiB installed - but
+  you can't use the latest Python features in your code.
+
+Flatpak applications use a *runtime*, a bundle of common libraries and
+executables. If your application is the first a user installs with a given
+runtime, Flatpak will download the runtime as well. Hopefully most apps will
+use a few runtimes, so that installation is quick and easy.
