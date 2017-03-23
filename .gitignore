@@ -7,3 +7,5 @@
 .flatpak-builder/
 *.done
 *.bundle
+__pycache__/
+*.pyc

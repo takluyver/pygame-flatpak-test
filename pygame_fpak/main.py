@@ -15,40 +15,59 @@ def get_baseapp(baseapp):
 
 inner_py = Path(__file__).parent / 'inner.py'
 
-def call_build_script(project_dir, packing_dir, build_dir, config):
-    """Copy the build script and call it inside the flatpak build.
-    """
-    print('Running build script...')
-    build_script = packing_dir / 'inner_build.py'
-    shutil.copy(str(inner_py), str(build_script))
-    # pytoml isn't in the build environment, so store the config as JSON
-    with (packing_dir / 'config.json').open('w') as f:
-        json.dump(config, f, indent=2)
-        
-    run(['flatpak', 'build', str(build_dir), '/usr/bin/python3',
-            str(build_script)], cwd=str(project_dir), check=True)
 
-def build_repo(config_path):
-    with config_path.open() as f:
-        config = pytoml.load(f)
-    check_config(config)
-    project_dir = config_path.parent
-    packing_dir = project_dir / 'build' / 'flatpak'
-    build_dir = packing_dir / 'build'
-    try:
-        shutil.rmtree(str(packing_dir))
-    except FileNotFoundError:
-        pass
+class Flatpacker:
+    def __init__(self, config_path):
+        self.config_path = config_path
+        with config_path.open() as f:
+            self.config = pytoml.load(f)
+        check_config(self.config)
+        self.project_dir = config_path.parent
+        self.packing_dir = self.project_dir / 'build' / 'flatpak'
+        self.build_dir = self.packing_dir / 'build'
+        self.repo_dir = self.project_dir / 'build' / 'flatpak-repo'
 
-    baseapp = 'org.pygame.BaseApp-py{}{}'.format(*config['python'].split('.'))
-    flatpak('build-init', '--base', baseapp, str(build_dir), config['appid'],
-            'org.freedesktop.Sdk', 'org.freedesktop.Platform', '1.4')
-    call_build_script(project_dir, packing_dir, build_dir, config)
-    flatpak('build-finish', str(build_dir), '--socket=x11', '--socket=pulseaudio', '--command=launch-game')
+    def call_build_script(self):
+        """Copy the build script and call it inside the flatpak build.
+        """
+        print('Running build script...')
+        build_script = self.packing_dir / 'inner_build.py'
+        shutil.copy(str(inner_py), str(build_script))
+        # pytoml isn't in the build environment, so store the config as JSON
+        with (self.packing_dir / 'config.json').open('w') as f:
+            json.dump(self.config, f, indent=2)
+            
+        run(['flatpak', 'build', str(self.build_dir), '/usr/bin/python3',
+                str(build_script)], cwd=str(self.project_dir), check=True)
 
-    repo_dir = project_dir / 'build' / 'flatpak-repo'
-    flatpak('build-export', str(repo_dir), str(build_dir))
-    return repo_dir
+    def build(self):
+        try:
+            shutil.rmtree(str(self.packing_dir))
+        except FileNotFoundError:
+            pass
+
+        baseapp = 'org.pygame.BaseApp-py{}{}'.format(*self.config['python'].split('.'))
+        flatpak('build-init', '--base', baseapp, str(self.build_dir), self.config['appid'],
+                'org.freedesktop.Sdk', 'org.freedesktop.Platform', '1.4')
+        self.call_build_script()
+        flatpak('build-finish', str(self.build_dir), '--socket=x11',
+                '--socket=pulseaudio', '--command=launch-game')
+
+        flatpak('build-export', str(self.repo_dir), str(self.build_dir))
+
+    def info(self):
+        repo_rel = self.repo_dir.relative_to(Path.cwd())
+        print()
+        print("Built to repo in {}".format(repo_rel))
+        print("To distribute, see http://docs.flatpak.org/en/latest/distributing-applications.html")
+        print("Make a single file bundle:")
+        print("  flatpak build-bundle {repo} {appid}.bundle {appid}"
+                .format(repo=repo_rel, appid=self.config['appid']))
+        print("Install and test:")
+        print("  flatpak --user remote-add --no-gpg-verify --if-not-exists {}-origin {}"
+                .format(self.config['appid'], repo_rel))
+        print("  flatpak --user install {appid}-origin {appid}"
+                .format(appid=self.config['appid']))
 
 class InputError(ValueError):
     pass
@@ -63,7 +82,9 @@ def main(argv=None):
         argv = sys.argv
     
     config_path = Path(argv[1]).resolve()
-    build_repo(config_path)
+    packer = Flatpacker(config_path)
+    packer.build()
+    packer.info()
 
 if __name__ == '__main__':
     main()
