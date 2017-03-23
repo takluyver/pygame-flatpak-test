@@ -1,10 +1,13 @@
+"""This is copied into the project directory and run in the flatpak build environment.
+
+It installs the necessary files for the game into the /app prefix.
+"""
+
+import json
 import os
 from pathlib import Path
-import pytoml
 from shutil import copy2, copytree, ignore_patterns
 import sys
-
-ignore_pycache = shutil.ignore_patterns()
 
 DESKTOP_TEMPLATE = """\
 [Desktop Entry]
@@ -27,8 +30,9 @@ python_paths = {
     '2.7': '/usr/bin/python',
 }
 
-def main()
-    config = pytoml.load(sys.argv[1])
+def main():
+    with open('build/flatpak/config.json') as f:
+        config = json.load(f)
     install_dir = Path('/app/bin/mygame')
     install_dir.mkdir(parents=True)
     for file in config['files']:
