@@ -2,13 +2,28 @@ import json
 from pathlib import Path
 import pytoml
 import shutil
-from subprocess import run
+from subprocess import run, PIPE
 import sys
 
 def flatpak(*args):
     run(('flatpak',) + args, check=True)
 
+class PkgRef:
+    def __init__(self, name, arch, branch):
+        self.name = name
+        self.arch = arch
+        self.branch = branch
+
+def list_installed():
+    res = run(['flatpak', 'list'], check=True, stdout=PIPE)
+    lines = res.stdout.decode('utf-8', 'replace').splitlines()
+    for line in lines:
+        yield PkgRef(*line.split()[0].split('/'))
+
 def get_baseapp(baseapp):
+    installed_names = [p.name for p in list_installed()]
+    if baseapp in installed_names:
+        return
     flatpak('--user', 'remote-add', '--if-not-exists', '--from',
     'pygame-bases', 'https://takluyver.github.io/pygame-flatpak-test/pgbase.flatpakrepo')
     flatpak('--user', 'install', 'pygame-bases', baseapp)
@@ -47,6 +62,7 @@ class Flatpacker:
             pass
 
         baseapp = 'org.pygame.BaseApp-py{}{}'.format(*self.config['python'].split('.'))
+        get_baseapp(baseapp)
         flatpak('build-init', '--base', baseapp, str(self.build_dir), self.config['appid'],
                 'org.freedesktop.Sdk', 'org.freedesktop.Platform', '1.4')
         self.call_build_script()
