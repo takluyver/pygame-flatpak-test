@@ -32,7 +32,7 @@ build-baseapp.done: org.pygame.baseapp.json
 	touch $@
 
 export-baseapp.done: build-baseapp.done
-	flatpak build-export repo baseapp
+	flatpak build-export repo build/baseapp
 	touch $@
 
 uninstall-baseapp:
