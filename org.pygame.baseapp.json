@@ -30,8 +30,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://sourceforge.net/projects/mikmod/files/libmikmod/3.3.10/libmikmod-3.3.10.tar.gz",
-                    "sha256": "00b3f5298431864ebd069de793ec969cfea3ae6f340f6dfae1ff7da1ae24ef48"
+                    "url": "https://sourceforge.net/projects/mikmod/files/libmikmod/3.3.11.1/libmikmod-3.3.11.1.tar.gz",
+                    "sha256": "ad9d64dfc8f83684876419ea7cd4ff4a41d8bcd8c23ef37ecb3a200a16b46d19"
                 }
             ]
         },
