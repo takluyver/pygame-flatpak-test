@@ -4,6 +4,29 @@ Flatpak packaging for pygame
 for Linux (`developer docs <http://docs.flatpak.org/en/latest/index.html>`__).
 Pygame is a framework for making games.
 
+June 2018
+---------
+
+I've focused on using ``flatpak-builder`` with JSON manifests,
+rather than the Python tool I started last year.
+Apps hosted on [Flathub](https://flathub.org/home) have to be built this way.
+
+The main files of interest are:
+
+``org.pygame.baseapp.json``
+  A 'base app' with all pygame's dependencies
+``org.pygame.baseapp-py35.json``
+  A 'base app' building on the previous one by adding pygame itself.
+  This uses the Freedesktop 1.6 runtime, which contains Python 3.5.
+``org.pygame.aliens.json``
+  A sample application which launches the *Aliens* example game included with
+  pygame.
+
+-------------
+
+March 2017
+----------
+
 This is an *experimental* tool to make Flatpak packages for pygame games. To use
 it:
 
