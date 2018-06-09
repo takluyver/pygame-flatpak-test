@@ -1,6 +1,4 @@
-#!/app/bin/python3
-import sys
-
+#!/usr/bin/python3
 from pygame.examples.aliens import main
 
 if __name__ == '__main__':

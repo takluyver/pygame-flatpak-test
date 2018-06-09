@@ -9,3 +9,4 @@
 *.bundle
 __pycache__/
 *.pyc
+icons.tar.gz

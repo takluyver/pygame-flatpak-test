@@ -1,0 +1,40 @@
+{
+    "id": "org.pygame.aliens",
+    "command": "/usr/bin/bash",
+    "base": "org.pygame.BaseApp-py35",
+    "runtime": "org.freedesktop.Platform",
+    "sdk": "org.freedesktop.Sdk",
+    "runtime-version": "1.6",
+    "finish-args": [
+       "--socket=x11",
+       "--socket=pulseaudio",
+       "--command=/app/bin/aliens"
+    ],
+    "modules": [
+        {
+            "name": "pygame",
+            "sources": [
+                {
+                  "type": "archive",
+                  "path": "icons.tar.gz",
+                  "strip-components": 0
+                },
+                {
+                    "type": "file",
+                    "path": "launch.py"
+                },
+                {
+                    "type": "file",
+                    "path": "org.pygame.aliens.desktop"
+                }
+            ],
+            "buildsystem": "simple",
+            "build-commands": [
+              "cp launch.py /app/bin/aliens",
+              "mkdir /app/share/applications",
+              "cp org.pygame.aliens.desktop /app/share/applications/",
+              "/usr/bin/python3 icons/install_icons.py org.pygame.aliens"
+            ]
+        }
+    ]
+}

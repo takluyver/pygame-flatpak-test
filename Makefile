@@ -15,7 +15,16 @@ build-aliens.done: Makefile install-baseapp-py36.done
 	flatpak build-finish $(build_dir) --socket=x11 --socket=pulseaudio --command=aliens
 	touch $@
 
-export-aliens.done: build-aliens.done
+# Can't use a directory as a flatpak source, so tar the icons up
+icons.tar.gz:
+	tar czf $@ icons/*
+
+build-aliens-from-json.done: install-baseapp-py35.done icons.tar.gz
+	rm -rf $(build_dir)
+	flatpak-builder $(build_dir) org.pygame.aliens.json
+	touch $@
+
+export-aliens.done: build-aliens-from-json.done
 	# Export the build directory into a repo (the source for installation)
 	flatpak build-export repo $(build_dir)
 	touch $@
