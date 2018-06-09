@@ -9,7 +9,7 @@ June 2018
 
 I've focused on using ``flatpak-builder`` with JSON manifests,
 rather than the Python tool I started last year.
-Apps hosted on [Flathub](https://flathub.org/home) have to be built this way.
+Apps hosted on `Flathub <https://flathub.org/home>`_ have to be built this way.
 
 The main files of interest are:
 
